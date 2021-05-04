@@ -4,7 +4,7 @@
   Info: Retrieves, modifies, translates, and links GLSLang.
 ]#
 import nimterop/[build, cimport]
-import os, distros, regex, strutils
+import os, regex, strutils
 
 const baseDir = getProjectCacheDir("glslang", false)
 const newPath = baseDir/"glslang"/"Public"/"ShaderLang.hpp"
@@ -32,9 +32,11 @@ else:
     data = data.replace(re"(\n){2,}", "\n\n")
     data &= "#endif //_COMPILER_INTERFACE_INCLUDED_"
     data = data.strip()
-    let oldData = readFile(newPath)
-    if oldData.cmpIgnoreCase(data) != 0:
-      echo "Different!"
+    if fileExists(newPath):
+      let oldData = readFile(newPath)
+      if oldData.cmpIgnoreCase(data) != 0:
+        writeFile(newPath, data)
+    else:
       writeFile(newPath, data)
 
   cOverride:
@@ -78,11 +80,11 @@ else:
   cCompile(baseDir/"glslang/MachineIndependent/*.cpp", "cpp")
   cCompile(baseDir/"OGLCompilersDLL/*.cpp", "cpp")
 
-  when detectOs(Windows):
+  when hostOS == "windows":
     cCompile(
       baseDir/"glslang/OSDependent/Windows/*.cpp", "cpp")
-      
-  when detectOs(Linux) or detectOs(MacOSX) or detectOs(Posix):
+  else: 
+    # I don't know if this will work for "every" platform
     cCompile(
       baseDir/"glslang/OSDependent/Unix/*.cpp", "cpp")
 

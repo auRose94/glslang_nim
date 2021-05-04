@@ -1,6 +1,6 @@
 # GLSLang_nim [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=96STXBG8HMW2E)
 
-## GLSLang [Nimterop](https://github.com/nimterop/nimterop) wrapper & library (compiles static for you)
+## GLSLang [Nimterop](https://github.com/nimterop/nimterop) wrapper & library
 
 This project was created to help with Vulkan and OpenGL. I needed something to compile my GLSL code.
 It's technically capable of printing HLSL, but it can print SPIRV and even present a program handle.
@@ -9,28 +9,32 @@ It's using only the C interface and has no C++ utilities available.
 
 Later versions might include helper functions but this just includes the imports for now.
 
-### Functions 
+This project will download [GLSLang](https://github.com/KhronosGroup/glslang), build it, and wrap it for you.
+
+Works on Windows and Linux (tested with WSL).
+
+### Functions
 
 ```nim
-proc ProfileName*(profile: EProfile): cstring 
-proc ShInitialize*(): cint 
-proc ShFinalize*(): cint 
-proc StageName*(a1: EShLanguage): cstring 
-proc ShConstructCompiler*(a1: EShLanguage; debugOptions: cint): ShHandle 
-proc ShConstructLinker*(a1: EShExecutable; debugOptions: cint): ShHandle 
-proc ShConstructUniformMap*(): ShHandle 
-proc ShDestruct*(a1: ShHandle) 
+proc ProfileName*(profile: EProfile): cstring
+proc ShInitialize*(): cint
+proc ShFinalize*(): cint
+proc StageName*(a1: EShLanguage): cstring
+proc ShConstructCompiler*(a1: EShLanguage; debugOptions: cint): ShHandle
+proc ShConstructLinker*(a1: EShExecutable; debugOptions: cint): ShHandle
+proc ShConstructUniformMap*(): ShHandle
+proc ShDestruct*(a1: ShHandle)
 proc ShCompile*(a1: ShHandle; shaderStrings: cchar; numStrings: cint;
                 lengths: ptr cint; a5: EShOptimizationLevel;
-                resources: ptr TBuiltInResource; debugOptions: cint): cint 
-proc ShLinkExt*(a1: ShHandle; h: UncheckedArray[ShHandle]; numHandles: cint): cint 
+                resources: ptr TBuiltInResource; debugOptions: cint): cint
+proc ShLinkExt*(a1: ShHandle; h: UncheckedArray[ShHandle]; numHandles: cint): cint
 proc ShSetEncryptionMethod*(a1: ShHandle)
-proc ShGetInfoLog*(a1: ShHandle): cstring 
-proc ShGetExecutable*(a1: ShHandle): pointer 
-proc ShSetVirtualAttributeBindings*(a1: ShHandle; a2: ptr ShBindingTable): cint 
-proc ShSetFixedAttributeBindings*(a1: ShHandle; a2: ptr ShBindingTable): cint 
-proc ShExcludeAttributes*(a1: ShHandle; attributes: ptr cint; count: cint): cint 
-proc ShGetUniformLocation*(uniformMap: ShHandle; name: cstring): cint 
+proc ShGetInfoLog*(a1: ShHandle): cstring
+proc ShGetExecutable*(a1: ShHandle): pointer
+proc ShSetVirtualAttributeBindings*(a1: ShHandle; a2: ptr ShBindingTable): cint
+proc ShSetFixedAttributeBindings*(a1: ShHandle; a2: ptr ShBindingTable): cint
+proc ShExcludeAttributes*(a1: ShHandle; attributes: ptr cint; count: cint): cint
+proc ShGetUniformLocation*(uniformMap: ShHandle; name: cstring): cint
 ```
 
 ### Types
@@ -38,13 +42,13 @@ proc ShGetUniformLocation*(uniformMap: ShHandle; name: cstring): cint
 ```nim
 type
   EProfile* = enum
-    EBadProfile = 0, 
-    ENoProfile = (1 shl 0), 
+    EBadProfile = 0,
+    ENoProfile = (1 shl 0),
     ECoreProfile = (1 shl 1),
-    ECompatibilityProfile = (1 shl 2), 
-    EProfileCount = 5, 
+    ECompatibilityProfile = (1 shl 2),
+    EProfileCount = 5,
     EEsProfile = (1 shl 3)
-    
+
   TLimits* = object
     nonInductiveForLoops*: bool
     whileLoops*: bool
@@ -158,7 +162,7 @@ type
     vulkan*: cint
     openGl*: cint
     vulkanRelaxed*: bool
-  
+
   TInputLanguage* = object
     languageFamily*: EShSource
     stage*: EShLanguage
@@ -189,8 +193,8 @@ type
     bindings*: ptr ShBinding
 
   ShHandle* = pointer
-  
-  defineEnum(TExtensionBehavior) 
+
+  defineEnum(TExtensionBehavior)
   defineEnum(EShLanguage)
   defineEnum(EShSource)
   defineEnum(EShClient)
@@ -208,7 +212,7 @@ type
     EBhEnable* = (EBhRequire + 1).TExtensionBehavior
     EBhWarn* = (EBhEnable + 1).TExtensionBehavior
     EBhDisable* = (EBhWarn + 1).TExtensionBehavior
-    EBhDisablePartial* = (EBhDisable + 1).TExtensionBehavior 
+    EBhDisablePartial* = (EBhDisable + 1).TExtensionBehavior
     EShLangVertex* = (0).EShLanguage
     EShLangTessControl* = (EShLangVertex + 1).EShLanguage
     EShLangTessEvaluation* = (EShLangTessControl + 1).EShLanguage
