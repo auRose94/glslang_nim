@@ -5,11 +5,11 @@
 This project was created to help with Vulkan and OpenGL. I needed something to compile my GLSL code.
 It's technically capable of printing HLSL, but it can print SPIRV and even present a program handle.
 
-It's using only the C interface and has no C++ utilities available.
+It's using only the C interface and has no C++ utilities available. However requires that the backend the nim compiler is using to be C++, GLSLang uses non-friendly C types in C++ namespaces and it's hard to fix.
 
 Later versions might include helper functions but this just includes the imports for now.
 
-This project will download [GLSLang](https://github.com/KhronosGroup/glslang), build it, and wrap it for you.
+This project will download [GLSLang](https://github.com/KhronosGroup/glslang), build it, and wrap it for you... Statically.
 
 Works on Windows and Linux (tested with WSL).
 
